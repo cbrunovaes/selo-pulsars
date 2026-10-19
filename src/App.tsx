@@ -11,6 +11,8 @@ function App() {
       <Route path="/" element={<Home2 />} />
       <Route path="/event/:id" element={<Event />} />
       <Route path="/admin" element={<AdminPage />} />
+
+          
       {/* <Route path="*" element={<NotFound />} /> */}
     </Routes>
   )
