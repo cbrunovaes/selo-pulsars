@@ -1,21 +1,23 @@
-import { Routes, Route } from 'react-router'
-import Event from './pages/event'
-// import Home from './pages/home'
-import Home2 from './pages/home2'
-import AdminPage from './pages/adminPage'
+import { Route, Routes } from "react-router";
+import AdminPage from "./pages/AdminPage";
+import Event from "./pages/Event";
+import Home from './pages/Home'
+import NotFound from "./pages/NotFound";
 
 function App() {
-  return (
-    <Routes>
-      {/* <Route path="/" element={<Home />} /> */}
-      <Route path="/" element={<Home2 />} />
-      <Route path="/event/:id" element={<Event />} />
-      <Route path="/adminPage" element={<AdminPage />} />
-      {/* <Route path="*" element={<NotFound />} /> */}
-    </Routes>
-  )
+	return (
+		<Routes>
+			{/* <Route path="/" element={<Home />} /> */}
+			<Route path="/" element={<Home />} />
+			<Route path="/event/:id" element={<Event />} />
+			<Route path="/admin" element={<AdminPage />} />
+			<Route path="*" element={<NotFound />} /> 
+		</Routes>
+	);
 }
 
-export default App
+export default App;
 
 
+
+<Route path="*" element={<NotFound />} />
