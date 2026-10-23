@@ -6,6 +6,9 @@ import NotFound from "./pages/NotFound";
 
 function App() {
 	return (
+		<>  {/* <-- Tag vazia abraçando tudo */}
+    
+      <div className="bg-noise"></div>
 		<Routes>
 			{/* <Route path="/" element={<Home />} /> */}
 			<Route path="/" element={<Home />} />
@@ -13,6 +16,7 @@ function App() {
 			<Route path="/admin" element={<AdminPage />} />
 			<Route path="*" element={<NotFound />} /> 
 		</Routes>
+	</>
 	);
 }
 
