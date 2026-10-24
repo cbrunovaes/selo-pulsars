@@ -29,6 +29,7 @@ function Event() {
 	const [carregando, setCarregando] = useState(true);
 	const [erroCarregar, setErroCarregar] = useState("");
 	const [flyerQuebrado, setFlyerQuebrado] = useState(false);
+	const [modalFlyerAberto, setModalFlyerAberto] = useState(false);
 
 	const [nome, setNome] = useState("");
 	const [telefone, setTelefone] = useState("");
@@ -125,11 +126,11 @@ function Event() {
 
 	const linkWhatsApp = evento
 		? `https://wa.me/${MEU_WHATSAPP}?text=${encodeURIComponent(
-				`Olá! Me inscrevi na lista do evento *${evento.nome}*.\n\n` +
+				`Salve! Me inscrevi na lista do evento *${evento.nome}*.\n\n` +
 					`*Nome:* ${nome.trim()}\n` +
 					`*Telefone:* ${telFormatado}\n` +
 					`*Instagram:* ${instaFormatado}\n\n` +
-					`Vou realizar o Pix na chave: *${MINHA_CHAVE_PIX}* e enviar o comprovante aqui para confirmar meu ingresso!`,
+					`Vou realizar o Pix na chave:* ${MINHA_CHAVE_PIX} * e enviar o comprovante aqui para confirmar meu ingresso!`,
 			)}`
 		: "#";
 
@@ -257,29 +258,28 @@ function Event() {
 						{/* COLUNA DA ESQUERDA NO PC (Flyer + Form) */}
 						<div className="mt-10 lg:mt-0 lg:col-start-1 lg:col-span-5 lg:row-start-1 flex flex-col gap-10">
 							
-							{/* Flyer */}
-							{evento.flyer && !flyerQuebrado && (
-								<div className="border-4 border-[#1e162b] bg-[#15101f] p-3 sm:p-4 shadow-[6px_6px_0_#d45d8a] sm:shadow-[8px_8px_0_#d45d8a]">
-									<a
-										href={evento.flyer}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="group relative mx-auto block w-full max-w-md"
-										title="Abrir flyer em tamanho cheio"
-									>
-										<img
-											src={evento.flyer}
-											alt={`Flyer de ${evento.nome}`}
-											loading="lazy"
-											onError={() => setFlyerQuebrado(true)}
-											className="block h-auto w-full border-4 border-[#1e162b] bg-[#09070c] object-contain transition duration-150 group-hover:-translate-y-1 group-hover:shadow-[4px_4px_0_#c77dff]"
-										/>
-										<span className="absolute bottom-2 right-2 bg-[#09070c] border-2 border-[#1e162b] px-2 py-1 text-[10px] font-black uppercase tracking-widest text-[#e8dff5]">
-											Ampliar ↗
-										</span>
-									</a>
-								</div>
-							)}
+						{/* Flyer */}
+						{evento.flyer && !flyerQuebrado && (
+							<div className="border-4 border-[#1e162b] bg-[#15101f] p-3 sm:p-4 shadow-[6px_6px_0_#d45d8a] sm:shadow-[8px_8px_0_#d45d8a]">
+								<button
+									type="button"
+									onClick={() => setModalFlyerAberto(true)}
+									className="group relative mx-auto block w-full max-w-md text-left cursor-zoom-in"
+									title="Clique para ampliar o flyer"
+								>
+									<img
+										src={evento.flyer}
+										alt={`Flyer de ${evento.nome}`}
+										loading="lazy"
+										onError={() => setFlyerQuebrado(true)}
+										className="block h-auto w-full border-4 border-[#1e162b] bg-[#09070c] object-contain transition duration-150 group-hover:-translate-y-1 group-hover:shadow-[4px_4px_0_#c77dff]"
+									/>
+									<span className="absolute bottom-2 right-2 bg-[#09070c] border-2 border-[#1e162b] px-2 py-1 text-[10px] font-black uppercase tracking-widest text-[#e8dff5] shadow-[2px_2px_0_#1e162b]">
+										Ampliar ⤢
+									</span>
+								</button>
+							</div>
+						)}
 
 							{/* Formulário */}
 							<section className="border-4 border-[#1e162b] bg-[#15101f] p-4 shadow-[6px_6px_0_#c77dff] sm:p-6 sm:shadow-[8px_8px_0_#c77dff]">
@@ -383,7 +383,7 @@ function Event() {
 											<span className="text-[#c77dff]">{nome.trim().split(" ")[0]}</span>.
 										</p>
 										<p className="mt-2 text-xs font-bold uppercase tracking-widest text-[#e8dff5]/50">
-											Chama no WhatsApp pra combinar o Pix.
+											Você pode mandar o pix pro {MINHA_CHAVE_PIX} e enviar o comprovante clicando abaixo. Da um salve lá! 
 										</p>
 
 										<a
@@ -402,7 +402,38 @@ function Event() {
 					</div>
 				)}
 			</div>
+			{/* MODAL DO FLYER EM TELA CHEIA */}
+				{modalFlyerAberto && evento && evento.flyer && (
+					<div
+						role="dialog"
+						aria-modal="true"
+						onClick={() => setModalFlyerAberto(false)}
+						className="fixed inset-0 z-50 flex items-center justify-center bg-[#09070c]/90 p-4 backdrop-blur-sm cursor-zoom-out animate-fadeIn"
+					>
+						<div 
+							onClick={(e) => e.stopPropagation()} 
+							className="relative max-h-[90vh] max-w-2xl border-4 border-[#1e162b] bg-[#15101f] p-2 sm:p-3 shadow-[8px_8px_0_#c77dff] cursor-default"
+						>
+							{/* Botão de Fechar */}
+							<button
+								type="button"
+								onClick={() => setModalFlyerAberto(false)}
+								className="absolute -top-11 right-0 border-2 border-[#1e162b] bg-[#d45d8a] px-3 py-1 font-orbitron text-xs font-black uppercase text-[#09070c] shadow-[3px_3px_0_#1e162b] hover:bg-[#c77dff] active:translate-x-0.5 active:translate-y-0.5"
+							>
+								✕ Fechar
+							</button>
+
+							{/* Imagem em Alta Resolução */}
+							<img
+								src={evento.flyer}
+								alt={`Flyer completo de ${evento.nome}`}
+								className="max-h-[80vh] w-auto max-w-full object-contain border-2 border-[#1e162b]"
+							/>
+						</div>
+					</div>
+				)}
 		</div>
+		
 	);
 }
 

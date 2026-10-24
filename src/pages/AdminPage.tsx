@@ -60,7 +60,7 @@ function AdminPage() {
 	// --- ADICIONAR VIP / STAFF / MANUAL ---
 	const [novoNome, setNovoNome] = useState("");
 	const [novoContato, setNovoContato] = useState("");
-	const [novaCategoria, setNovaCategoria] = useState("VIP / Banda");
+	const [novaCategoria, setNovaCategoria] = useState("");
 	const [novoStatus, setNovoStatus] = useState<"Pago" | "Pendente">("Pago");
 
 	const eventoAtual = eventos.find((e) => e.id === eventoSelecionadoId) ?? null;
@@ -242,7 +242,10 @@ function AdminPage() {
 	// --- FUNÇÕES DE INGRESSOS ---
 	async function adicionarPessoaManual(e: FormEvent) {
 		e.preventDefault();
-		if (!eventoSelecionadoId || !novoNome.trim()) return;
+		if (!eventoSelecionadoId || !novoNome.trim() || !novaCategoria) {
+			alert("Preencha o nome e selecione uma categoria, caraio")
+		 return;
+		};
 
 		const { error } = await supabase.from("ingressos").insert({
 			evento_id: eventoSelecionadoId,
@@ -261,6 +264,7 @@ function AdminPage() {
 		setNovoNome("");
 		setNovoContato("");
 		carregarIngressos(eventoSelecionadoId);
+		setNovaCategoria("");
 	}
 
 	async function confirmarPagamento(idIngresso: number) {
@@ -602,7 +606,7 @@ function AdminPage() {
 										id="ev-bandas"
 										value={evBandas}
 										onChange={(e) => setEvBandas(e.target.value)}
-										placeholder="Ex: Bardum, Panta Rei, Cursed Cult"
+										placeholder="Ex: Bardum, Cursed Cult, Analistas de Vênus"
 										className={inputClasse}
 									/>
 								</div>
@@ -712,7 +716,7 @@ function AdminPage() {
 									value={novaCategoria}
 									onChange={(e) => setNovaCategoria(e.target.value)}
 									className="border-2 border-[#1e162b] bg-[#09070c] p-3 text-sm font-bold text-[#e8dff5] focus:outline-none focus:border-[#c77dff]"
-								>
+								>	<option value="" disabled> Selecione a categoria </option>
 									<option value="Antecipado">Antecipado (Pagante)</option>
 									<option value="Staff / Selo">Staff / Selo Pulsars</option>
 									<option value="Fotografia">Fotografia / Mídia</option>

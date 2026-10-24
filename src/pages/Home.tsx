@@ -71,46 +71,109 @@ function Home() {
 		carregarEventos();
 	}, []);
 
+	const fotosHistorico = Array.from({ length: 13 }, (_, i) => `/historico/evento${i + 1}.png`);
+
 return (
         <div className="min-h-screen overflow-x-hidden bg-[#09070c] text-[#e8dff5] selection:bg-[#c77dff] selection:text-[#09070c]">
             
-            {/* Topo com Logo estilo Fanzine/Impressão */}
-            <header className="px-4 pb-8 pt-12 text-center sm:px-5 sm:pb-10 sm:pt-14 flex flex-col items-center">
-                <div className="relative mb-8 group">
-                    {/* Sombra dura deslocada estilo offset por trás da imagem */}
-                    <div className="absolute inset-0 bg-[#d45d8a] translate-x-3 translate-y-3 border-2 border-[#1e162b]"></div>
-                    {/* Logo com borda pesada imitando um adesivo quadrado rotacionado */}
-                    <img 
-                        src="/logo.png" 
-                        alt="Selo Pulsars" 
-                        className="w-40 md:w-48 h-auto relative z-10 border-4 border-[#1e162b] transform -rotate-3 transition-transform group-hover:-rotate-1"
-                    />
+            {/* ========================================================= */}
+            {/* HERO PRINCIPAL: FOTOS DE FUNDO + TEXTOS POR CIMA           */}
+            {/* ========================================================= */}
+            {/* min-h-[480px] no mobile e sm:min-h-[580px] no PC para dar o tamanho grande que você queria */}
+            <header className="relative w-full overflow-hidden min-h-[480px] sm:min-h-[580px] flex flex-col justify-center items-center px-4 py-12 text-center">
+
+                {/* 1. ANIMAÇÃO DE ROLAGEM INFINITA PARA A ESQUERDA (CSS PURO) */}
+                {/* 45s é uma velocidade suave. Diminua para 30s se quiser mais rápido, ou 60s se quiser mais lento */}
+                <style>{`
+                    @keyframes scrollInfinito {
+                        0% { transform: translateX(0); }
+                        100% { transform: translateX(-50%); }
+                    }
+                    .trilho-fotos {
+                        display: flex;
+                        width: max-content;
+                        animation: scrollInfinito 55s linear infinite;
+                    }
+                `}</style>
+
+                {/* 2. CAMADA DE FUNDO (FOTOS ROLANDO) */}
+                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                    
+                    {/* Duplicamos a lista de fotos [...fotosHistorico, ...fotosHistorico] 
+                        para que quando o primeiro bloco acabar, o segundo já esteja entrando sem emendas */}
+                    <div className="trilho-fotos h-full">
+                        {[...fotosHistorico, ...fotosHistorico].map((src, index) => (
+                            <div
+                                key={index}
+                                /* Ajuste a largura das fotos no fundo aqui: w-72 (mobile) e sm:w-96 (PC) */
+                                className="h-full w-72 sm:w-96 shrink-0 overflow-hidden border-r border-[#1e162b]/60"
+                            >
+                                <img
+                                    src={src}
+                                    alt={`Foto evento ${index + 1}`}
+                                    loading="lazy"
+                                    /* object-cover estica na proporção correta; 
+                                       contrast e saturate dão a pegada de filme 70s sem estourar */
+                                    className="h-full w-full object-cover saturate-75 contrast-125 blur-[0.4px] brightness-90"
+                                />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* 3. PELÍCULA ESCURA E GRADIENTE (MUITO IMPORTANTE PARA LEITURA) */}
+                    {/* Se achar que as fotos estão muito escuras, troque bg-[#09070c]/75 por /60 ou /50 */}
+                    <div className="absolute inset-0 bg-[#09070c]/75 mix-blend-multiply" />
+                    
+                    {/* Gradiente vertical que funde as fotos suavemente no topo e na base preta */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#09070c]/90 via-transparent to-[#09070c]" />
                 </div>
-                
-                {/* Título com cores contrastantes separadas e sombra escura pra leitura */}
-                <h1 className="mt-2 wrap-break-word font-orbitron font-black text-4xl uppercase leading-none tracking-widest text-[#e8dff5] drop-shadow-[3px_3px_0_#1e162b] sm:text-6xl sm:drop-shadow-[5px_5px_0_#1e162b]">
-                    Ingressos <span className="text-[#d45d8a]">Pulsars</span>
-                </h1>
-                
-                <p className="mx-auto mt-4 max-w-xs text-xs font-bold uppercase tracking-widest text-[#e8dff5]/70 sm:mt-5 sm:max-w-md sm:text-sm">
-                    Escolhe o rolê, entra na lista, faz o Pix e vem pra bagunça!
-                </p>
+
+                {/* ========================================================= */}
+                {/* 4. CAMADA DA FRENTE (LOGO, TÍTULO E SUBTÍTULO)            */}
+                {/* O 'relative z-10' garante que tudo aqui fique por cima das fotos */}
+                {/* ========================================================= */}
+                <div className="relative z-10 flex flex-col items-center max-w-3xl mx-auto">
+                    
+                    {/* LOGO PULSARS (ajuste o tamanho em w-28 / sm:w-36 se quiser maior) */}
+                    <div className="mb-4 transition-transform duration-300 hover:scale-105">
+                        <img 
+                            src="/logo.png" 
+                            alt="Pulsars Records Logo" 
+                            className="h-28 w-28 sm:h-36 sm:w-36 rounded-full aspect-square object-cover border-2 border-[#c77dff]/60 shadow-[0_0_20px_rgba(199,125,255,0.25)] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
+                        />
+                    </div>
+
+                    {/* TÍTULO INGRESSOS PULSARS COM SOMBRA FORTE */}
+                    <h1 className="wrap-break-word font-orbitron font-black text-4xl uppercase leading-none tracking-widest text-[#e8dff5] drop-shadow-[4px_4px_0_#09070c] sm:text-6xl sm:drop-shadow-[6px_6px_0_#09070c]">
+                        Ingressos <span className="text-[#d45d8a]">Pulsars</span>
+                    </h1>
+                    
+                    {/* SUBTÍTULO COM FUNDO TRANSLÚCIDO PARA LEITURA PERFEITA */}
+                    <p className="mt-4 max-w-xs text-xs font-bold uppercase tracking-widest text-[#e8dff5] sm:mt-5 sm:max-w-md sm:text-sm drop-shadow-[2px_2px_0_#09070c] bg-[#09070c]/60 px-4 py-1.5 rounded border border-[#1e162b]/70">
+                        Escolhe o rolê, entra na lista, faz o Pix e vem pra bagunça!
+                    </p>
+                </div>
             </header>
 
-            {/* Fita Ticker */}
-            <div className="-rotate-1 scale-105 overflow-hidden whitespace-nowrap border-y-4 border-[#1e162b] bg-[#c77dff] py-2 text-center text-[10px] font-black uppercase tracking-[0.25em] text-[#09070c] sm:text-sm sm:tracking-[0.35em]">
-                ★ som alto ★ DIY ★{" "}
-                <span className="hidden sm:inline">
-                    rolê independente ★ faça você mesma ★ baderna ★
-                </span>
+            {/* ========================================================= */}
+            {/* FITA TICKER (SOM ALTO, DIY...) DIVISÓRIA                   */}
+            {/* ========================================================= */}
+            <div className="relative w-full overflow-hidden py-3">
+                <div className="-rotate-1 w-[105%] -translate-x-[2.5%] border-y-4 border-[#1e162b] bg-[#c77dff] py-2 text-center text-[10px] font-black uppercase tracking-[0.2em] text-[#09070c] sm:text-sm sm:tracking-[0.35em]">
+                    <span className="sm:hidden">
+                        ★ som alto ★ DIY ★ rolê independente ★ baderna ★ som alto ★
+                    </span>
+                    <span className="hidden sm:inline">
+                        ★ som alto ★ DIY ★ rolê independente ★ faça você mesma ★ baderna ★
+                    </span>
+                </div>
             </div>
-
             {/* Lista Principal */}
             <main className="mx-auto max-w-5xl px-4 py-10 sm:px-5 sm:py-12">
                 <h2 className="mb-8 inline-block border-b-4 border-[#d45d8a] font-orbitron text-xl font-black uppercase tracking-widest text-[#e8dff5] sm:text-2xl">
                     Próximos rolês
                 </h2>
-
+				
                 {/* Loading */}
                 {carregando && (
                     <div className="space-y-8">
